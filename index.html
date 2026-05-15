@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Hidden Speakeasy</title>
+  <meta name="description"
+    content="Menú digital exclusivo de bar con bebidas premium, cocteles y promociones especiales.">
+
+  <!-- Favicon (Icono de la pestaña del navegador) -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="logo.png">
+
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="safe-area">
+
+  <!-- Theme Toggle -->
+  <button aria-label="Cambiar tema" class="theme-toggle" id="theme-toggle">
+    <span class="material-symbols-outlined icon-sun">light_mode</span>
+    <span class="material-symbols-outlined icon-moon">dark_mode</span>
+  </button>
+
+  <!-- Promo Banner Full Width -->
+  <div class="promo-wrapper" id="promo-wrapper">
+    <div class="carousel" id="promo-carousel">
+      <div class="carousel-track">
+        <!-- Promoción 1 -->
+        <div class="carousel-slide active">
+          <div class="promo-banner">
+            <div class="promo-left">
+              <div class="promo-icon">
+                <span class="material-symbols-outlined">local_bar</span>
+              </div>
+              <div>
+                <h2 class="menu-header">$699 NACIONALES</h2>
+                <p>INCLUYE MEZCLADORES</p>
+              </div>
+            </div>
+            <div class="promo-right">
+              <div class="promo-right-text">
+                <p> </p>
+                <p class="menu-header">Valido hasta las 12:00 AM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Promoción 2 -->
+        <div class="carousel-slide">
+          <div class="promo-banner">
+            <div class="promo-left">
+              <div class="promo-icon">
+                <span class="material-symbols-outlined">nightlife</span>
+              </div>
+              <div>
+                <h2 class="menu-header">2 X $199</h2>
+                <p>EN LITROS LEGENDARIOS</p>
+              </div>
+            </div>
+            <div class="promo-right">
+              <div class="promo-right-text">
+                <p>AL RESERVAR</p>
+                <p class="menu-header">Valido hasta las 12:00 AM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Promoción 3 -->
+        <div class="carousel-slide">
+          <div class="promo-banner">
+            <div class="promo-left">
+              <div class="promo-icon">
+                <span class="material-symbols-outlined">sports_bar</span>
+              </div>
+              <div>
+                <h2 class="menu-header">2X1 EN CUBOS DE CERVEZA</h2>
+                <p>Valido en XX, Tecate e Indio</p>
+              </div>
+            </div>
+            <div class="promo-right">
+              <div class="promo-right-text">
+                <p>HASTA LAS 12:00 AM</p>
+                <p class="menu-header"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-dots" id="carousel-dots"></div>
+    </div>
+  </div>
+
+  <!-- Menu Container -->
+  <div class="menu-container">
+    <div class="left-col" id="left-col"></div>
+    <div class="right-col" id="right-col"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
