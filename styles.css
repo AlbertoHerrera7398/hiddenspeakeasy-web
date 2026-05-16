@@ -730,11 +730,12 @@ body.dark .litros-header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
   background-color: #032a63;
   color: white;
   transition: background-color 0.4s ease, color 0.4s ease;
+  width: 100%;
 }
 
 body.dark .global-social {
@@ -743,15 +744,19 @@ body.dark .global-social {
 
 .social-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  letter-spacing: 0.1em;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
   opacity: 0.9;
   text-align: center;
+  line-height: 1.2;
+  margin: 0;
 }
 
 .social-icons {
   display: flex;
-  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .social-link {
@@ -761,6 +766,7 @@ body.dark .global-social {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.5rem;
 }
 
 .social-link:hover {
@@ -769,6 +775,25 @@ body.dark .global-social {
 }
 
 .social-link svg {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
+}
+
+/* Responsive adjustments for tablet and desktop */
+@media (min-width: 768px) {
+  .global-social {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+  .social-title {
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+  }
+  .social-icons {
+    gap: 2rem;
+  }
+  .social-link svg {
+    width: 28px;
+    height: 28px;
+  }
 }
