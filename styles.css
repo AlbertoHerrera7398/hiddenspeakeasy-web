@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Bebas+Neue&display=swap');
 
-/* ===== RESET & BASE ===== */
+/* ===== RESET & BASE (Estilos Base) ===== */
+/* Aquí se definen reglas generales para resetear márgenes y establecer los colores 
+   de fondo y texto tanto para el modo claro como para el modo oscuro (body.dark). */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
@@ -25,7 +27,10 @@ body.dark {
   color: #e0e0e0;
 }
 
-/* ===== TYPOGRAPHY ===== */
+/* ===== TYPOGRAPHY (Fuentes y Tipografía) ===== */
+/* Configuración de las dos fuentes principales: 
+   - Bebas Neue para títulos y encabezados
+   - Archivo Narrow para los textos pequeños y precios */
 .menu-header {
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 0.05em;
@@ -138,7 +143,8 @@ body.dark .theme-toggle .icon-sun {
   transform: rotate(0) scale(1);
 }
 
-/* ===== PROMO BANNER ===== */
+/* ===== PROMO BANNER (Diseño del Banner Superior) ===== */
+/* Estilos visuales de la barra de promociones: colores, iconos, y adaptación al tema oscuro. */
 .promo-banner {
   background-color: transparent;
   color: white;
@@ -199,22 +205,24 @@ body.dark .promo-icon {
 }
 
 .promo-left h2 { font-size: 1.5rem; line-height: 1; }
-.promo-left p { font-weight: 700; font-size: 0.875rem; opacity: 0.9; }
+.promo-left p { font-weight: 700; font-size: 0.875rem; opacity: 0.9; text-transform: uppercase; }
 
 .promo-right {
-  display: none;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 0.5rem;
   position: relative;
   z-index: 2;
+  margin-top: 0.25rem;
 }
 
-.promo-right-text { text-align: right; }
+.promo-right-text { text-align: center; }
 .promo-right-text p:first-child {
   font-size: 0.6rem; font-weight: 700;
   letter-spacing: 0.15em; opacity: 0.7; text-transform: uppercase;
 }
-.promo-right-text p:last-child { font-size: 1.25rem; }
+.promo-right-text p:last-child { font-size: 1.1rem; }
 
 .promo-badge {
   border: 2px solid rgba(255,255,255,0.4);
@@ -339,7 +347,9 @@ body.dark .carousel-dot.active {
   transition: width linear;
 }
 
-/* ===== LAYOUT ===== */
+/* ===== LAYOUT (Estructura Principal del Menú) ===== */
+/* Utiliza Flexbox para dividir la pantalla. En computadoras se divide a la mitad (50% y 50%)
+   y en celulares todo se apila de manera vertical. */
 .menu-container {
   display: flex;
   flex-direction: column;
@@ -646,12 +656,19 @@ body.dark .litros-header {
   padding-right: env(safe-area-inset-right);
 }
 
-/* ===== DESKTOP (>= 1024px) ===== */
+/* ===== DESKTOP (>= 1024px) (Vista para Computadoras/Tablets Grandes) ===== */
+/* A partir de este tamaño de pantalla, la columna izquierda y derecha se colocan una al lado de la otra. */
 @media (min-width: 1024px) {
   .promo-wrapper { padding: 0.75rem 2rem 0.5rem 2rem; }
   .promo-left h2 { font-size: 1.875rem; }
   .promo-left p { font-size: 1rem; }
-  .promo-right { display: flex; }
+  .promo-right { 
+    flex-direction: row;
+    margin-top: 0;
+    gap: 1.5rem;
+  }
+  .promo-right-text { text-align: right; }
+  .promo-right-text p:last-child { font-size: 1.25rem; }
 
   .menu-container {
     flex-direction: row;
@@ -682,7 +699,8 @@ body.dark .litros-header {
   .secret-tagline .big { font-size: 2.5rem; }
 }
 
-/* ===== MOBILE PROMO (centrado) ===== */
+/* ===== MOBILE PROMO (centrado) (Ajustes para Celulares) ===== */
+/* En pantallas pequeñas, centra todos los elementos del banner para que no se corten. */
 @media (max-width: 1023px) {
   .promo-banner {
     flex-direction: column;

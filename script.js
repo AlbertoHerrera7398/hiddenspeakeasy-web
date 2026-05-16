@@ -1,4 +1,6 @@
-// ===== THEME TOGGLE =====
+// ===== THEME TOGGLE (Modo Oscuro/Claro) =====
+// Esta sección verifica si el usuario había elegido previamente el modo oscuro.
+// Usa 'localStorage' para guardar esa preferencia en su dispositivo.
 (function () {
   const saved = localStorage.getItem('color-theme');
   if (saved === 'dark') document.body.classList.add('dark');
@@ -16,7 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ===== MENU DATA =====
+// ===== MENU DATA (Datos del Menú) =====
+// Aquí se almacena TODA la información de bebidas y precios.
+// Es un objeto de JavaScript. Si quieres cambiar el precio de una botella o añadir una nueva, 
+// solo necesitas editar este bloque de texto. No hace falta tocar el HTML.
 const menuData = {
   leftCol: [
     {
@@ -151,7 +156,9 @@ const menuData = {
   ]
 };
 
-// ===== RENDER FUNCTIONS =====
+// ===== RENDER FUNCTIONS (Generadores de HTML) =====
+// Estas funciones leen los datos de "MENU DATA" y construyen el código HTML 
+// automáticamente. Esto permite que la página sea modular y muy fácil de actualizar.
 function createSectionHeader(title, cols, extraClass) {
   const cls = extraClass ? `section-header ${extraClass}` : 'section-header';
   const labels = cols.map(c => `<span class="column-header" style="width:42px;text-align:right">${c}</span>`).join('');
@@ -296,7 +303,10 @@ function renderRightCol() {
   return html;
 }
 
-// ===== INIT =====
+// ===== INIT (Inicialización) =====
+// Esta función se ejecuta ("DOMContentLoaded") una vez que la página HTML se termina de cargar.
+// Su tarea es inyectar el HTML generado en las columnas izquierda y derecha, revisar el 
+// horario de las promociones y finalmente encender el carrusel de imágenes.
 document.addEventListener('DOMContentLoaded', () => {
   const leftCol = document.getElementById('left-col');
   const rightCol = document.getElementById('right-col');
@@ -304,11 +314,153 @@ document.addEventListener('DOMContentLoaded', () => {
   if (leftCol) leftCol.innerHTML = renderLeftCol();
   if (rightCol) rightCol.innerHTML = renderRightCol();
 
-  // Initialize carousel after rendering left column
-  initCarousel();
+  loadPromotionsFromCSV();
 });
 
-// ===== CAROUSEL =====
+// ===== PROMO SCHEDULE & CSV LOADING =====
+function loadPromotionsFromCSV() {
+  const promoWrapper = document.getElementById('promo-wrapper');
+  if (!promoWrapper) return;
+
+  try {
+    // Obtenemos los datos desde el archivo promociones.js cargado en el HTML
+    const text = typeof promocionesCSV !== 'undefined' ? promocionesCSV : '';
+    if (!text) {
+      promoWrapper.style.display = 'none';
+      return;
+    }
+    
+    // Parse CSV
+    const rows = text.split('\n').map(row => row.trim()).filter(row => row.length > 0);
+    const headers = rows[0].split(',');
+    
+    const promotions = [];
+    for (let i = 1; i < rows.length; i++) {
+      const cols = rows[i].split(',');
+      promotions.push({
+        icono: cols[0],
+        titulo: cols[1],
+        subtitulo: cols[2],
+        condicion: cols[3],
+        validez: cols[4],
+        horaInicio: parseInt(cols[5], 10),
+        horaFin: parseInt(cols[6], 10),
+        reloj: cols[7] ? cols[7].trim().toUpperCase() : 'OFF'
+      });
+    }
+
+    const currentHour = new Date().getHours();
+    
+    // Filter active promotions
+    const activePromos = promotions.filter(p => {
+      if (isNaN(p.horaInicio) || isNaN(p.horaFin)) return true; // Si no hay horario, se muestra siempre
+      
+      let inicio = p.horaInicio;
+      let fin = p.horaFin;
+
+      // Si ponen la misma hora de inicio y fin, asumimos que no se debe mostrar
+      if (inicio === fin) return false;
+
+      if (inicio < fin) {
+        return currentHour >= inicio && currentHour < fin;
+      } else {
+        // Cruza la medianoche (ej. 21 a 3)
+        return currentHour >= inicio || currentHour < fin;
+      }
+    });
+
+    if (activePromos.length === 0) {
+      promoWrapper.style.display = 'none';
+      return;
+    }
+
+    // Render HTML
+    const track = document.getElementById('promo-track');
+    if (!track) return;
+    
+    track.innerHTML = activePromos.map((p, index) => {
+      // El reloj ahora es independiente por cada fila del CSV
+      const needsTimer = p.reloj === 'ON';
+      const countdownHTML = needsTimer ? `<p class="menu-header countdown-timer" data-fin="${p.horaFin}" style="margin-top:0.25rem"></p>` : '';
+      
+      return `
+      <div class="carousel-slide ${index === 0 ? 'active' : ''}">
+        <div class="promo-banner">
+          <div class="promo-left">
+            <div class="promo-icon">
+              <span class="material-symbols-outlined">${p.icono}</span>
+            </div>
+            <div>
+              <h2 class="menu-header">${p.titulo}</h2>
+              <p>${p.subtitulo}</p>
+            </div>
+          </div>
+          <div class="promo-right">
+            <div class="promo-right-text">
+              <p>${p.condicion}</p>
+              <p class="menu-header" style="font-size:0.85rem; opacity:0.8">${p.validez}</p>
+              ${countdownHTML}
+            </div>
+          </div>
+        </div>
+      </div>
+      `;
+    }).join('');
+
+    promoWrapper.style.display = 'block';
+    initCarousel();
+
+    // Iniciamos el contador (la función interna ya verifica si hay relojes visibles)
+    updateCountdowns();
+    if (!window.countdownInterval) {
+      window.countdownInterval = setInterval(updateCountdowns, 1000);
+    }
+
+  } catch (error) {
+    console.error('Error cargando las promociones:', error);
+    promoWrapper.style.display = 'none';
+  }
+}
+
+// ===== COUNTDOWN LOGIC =====
+function updateCountdowns() {
+  const timers = document.querySelectorAll('.countdown-timer');
+  if (timers.length === 0) return;
+
+  const now = new Date();
+  
+  timers.forEach(timer => {
+    const finHour = parseInt(timer.getAttribute('data-fin'), 10);
+    if (isNaN(finHour)) return;
+
+    let target = new Date();
+    target.setHours(finHour, 0, 0, 0);
+
+    if (target <= now) {
+      target.setDate(target.getDate() + 1);
+    }
+
+    const diff = target - now;
+    if (diff <= 0) {
+      timer.innerHTML = "¡TIEMPO AGOTADO!";
+      return;
+    }
+
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const pad = num => num.toString().padStart(2, '0');
+    // Si estamos en tema oscuro, color cyán/neón, si no, azul oscuro.
+    // Para simplificar, usamos currentColor pero le damos un formato llamativo.
+    timer.innerHTML = `TIEMPO: <span style="font-weight:700; color: #ff007f; text-shadow: 0 0 5px rgba(255,0,127,0.5)">${pad(h)}:${pad(m)}:${pad(s)}</span>`;
+  });
+}
+
+// ===== CAROUSEL (Lógica del Carrusel) =====
+// Esta sección controla el banner superior de promociones.
+// Se encarga del cambio automático de diapositivas (autoplay cada 8 segundos), 
+// de los botones/puntos de navegación y de permitir cambiar de promo al deslizar en el celular.
 function initCarousel() {
   const carousel = document.getElementById('promo-carousel');
   if (!carousel) return;
@@ -322,7 +474,7 @@ function initCarousel() {
 
   let current = 0;
   let interval = null;
-  const INTERVAL_MS = 8000;
+  const INTERVAL_MS = 10000;
 
   // Create dots
   slides.forEach((_, i) => {
