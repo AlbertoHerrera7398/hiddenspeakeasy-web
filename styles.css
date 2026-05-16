@@ -730,12 +730,12 @@ body.dark .litros-header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.5rem 1rem;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
   background-color: #032a63;
   color: white;
   transition: background-color 0.4s ease, color 0.4s ease;
-  width: 100%;
+  box-sizing: border-box;
 }
 
 body.dark .global-social {
@@ -745,7 +745,7 @@ body.dark .global-social {
 .social-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.25rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   opacity: 0.9;
   text-align: center;
   line-height: 1.2;
@@ -754,46 +754,60 @@ body.dark .global-social {
 
 .social-icons {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .social-link {
   color: inherit;
   opacity: 0.8;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark .social-link {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .social-link:hover {
   opacity: 1;
-  transform: translateY(-3px) scale(1.1);
+  transform: translateY(-3px);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .social-link svg {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
 }
 
 /* Responsive adjustments for tablet and desktop */
 @media (min-width: 768px) {
   .global-social {
-    padding: 1.5rem;
-    gap: 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 2rem 3rem;
   }
   .social-title {
     font-size: 1.5rem;
-    letter-spacing: 0.1em;
+    text-align: left;
   }
   .social-icons {
-    gap: 2rem;
+    gap: 1.5rem;
   }
   .social-link svg {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .global-social {
+    padding: 2rem 4rem;
   }
 }
